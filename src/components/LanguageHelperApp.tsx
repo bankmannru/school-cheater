@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Languages, MessageSquare, Book, Copy, Check, BookOpen } from 'lucide-react';
@@ -44,7 +44,7 @@ const LanguageHelperApp = () => {
     const [isError, setIsError] = useState(false);
     const [copied, setCopied] = useState(false);
 
-    const modes: ModeOption[] = [
+    const modes = useMemo<ModeOption[]>(() => [
         {
             id: 'translate',
             name: 'Перевод',
@@ -123,7 +123,7 @@ const LanguageHelperApp = () => {
 
 Форматируй ответ в виде хорошо структурированного Markdown.`
         }
-    ];
+    ], [selectedLanguage]);
 
     const handleProcess = useCallback(async () => {
         if (!inputText.trim() || !selectedLanguage || !selectedMode) return;
@@ -159,9 +159,9 @@ const LanguageHelperApp = () => {
                 throw new Error("Invalid response from Gemini.");
             }
 
-        } catch (error: any) {
+        } catch (error: Error | unknown) {
             setIsError(true);
-            setOutputText(`Ошибка при обработке текста: ${error.message}`);
+            setOutputText(`Ошибка при обработке текста: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`);
         } finally {
             setIsLoading(false);
         }

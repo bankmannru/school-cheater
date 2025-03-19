@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, BookOpen, Clock, Copy, Check } from 'lucide-react';
@@ -28,7 +28,7 @@ const EssayHelperApp = () => {
     const [copied, setCopied] = useState(false);
     const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
-    const templates: TemplateOption[] = [
+    const templates = useMemo<TemplateOption[]>(() => [
         {
             id: 'template1',
             name: 'План сочинения',
@@ -54,7 +54,7 @@ const EssayHelperApp = () => {
             name: 'Полное сочинение',
             prompt: 'Напиши полное {essayType} на тему "{topic}" для ученика старшей школы. Сочинение должно быть структурированным, содержать введение, основную часть с аргументами и заключение.'
         }
-    ];
+    ], []);
 
     const handleGenerate = useCallback(async () => {
         if (!topic.trim() || !selectedTemplate) return;
@@ -92,9 +92,9 @@ const EssayHelperApp = () => {
                 throw new Error("Invalid response from Gemini.");
             }
 
-        } catch (error: any) {
+        } catch (error: Error | unknown) {
             setIsError(true);
-            setResult(`Ошибка при создании текста: ${error.message}`);
+            setResult(`Ошибка при создании текста: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`);
         } finally {
             setIsLoading(false);
         }

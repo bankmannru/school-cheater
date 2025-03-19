@@ -42,9 +42,9 @@ const CheatsheetGeneratorApp = () => {
                 throw new Error("Invalid response from Gemini.");
             }
 
-        } catch (error: any) {
+        } catch (error: Error | unknown) {
             setIsError(true);
-            setCheatsheet(`Ошибка при генерации шпаргалки: ${error.message}`);
+            setCheatsheet(`Ошибка при генерации шпаргалки: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`);
         } finally {
             setIsLoading(false);
         }

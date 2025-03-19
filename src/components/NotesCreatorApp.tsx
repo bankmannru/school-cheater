@@ -58,9 +58,9 @@ const NotesCreatorApp = () => {
                 throw new Error("Invalid response from Gemini.");
             }
 
-        } catch (error: any) {
+        } catch (error: Error | unknown) {
             setIsError(true);
-            console.error('Error creating note:', error);
+            console.error('Error creating note:', error instanceof Error ? error.message : 'Unknown error');
         } finally {
             setIsLoading(false);
         }

@@ -65,9 +65,9 @@ const MathSolverApp = () => {
                 throw new Error("Invalid response from Gemini.");
             }
 
-        } catch (error: any) {
+        } catch (error: Error | unknown) {
             setIsError(true);
-            setSolution(`Ошибка при решении задачи: ${error.message}`);
+            setSolution(`Ошибка при решении задачи: ${error instanceof Error ? error.message : 'Неизвестная ошибка'}`);
         } finally {
             setIsLoading(false);
         }
